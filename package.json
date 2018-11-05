@@ -1,0 +1,19 @@
+{
+  "name": "98-mongoose",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon -e html,js,css ./server/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.3.9",
+    "morgan": "^1.9.1",
+    "swig": "^1.4.2"
+  }
+}
