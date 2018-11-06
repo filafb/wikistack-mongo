@@ -22,7 +22,7 @@ const pageSchema = new Schema({
 });
 
 pageSchema.virtual('route').get(function() {
-  return `/wiki/${this.title}`
+  return `/wiki/${this.urlTitle}`
 })
 
 pageSchema.pre("validate", function() {

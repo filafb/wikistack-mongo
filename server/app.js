@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const path = require('path')
 const bodyParser = require('body-parser')
 const swig = require('swig')
+require('../filters')(swig)
 const wikiRouter = require('./routes/wiki')
 const db = require("./models")
 
@@ -28,6 +29,8 @@ app.get('/', (req, res, next) => {
   res.sendFile(path.join(__dirname, '../public/index.html'))
 })
 
-db.on('error', console.error.bind(console, 'mongodb connection error:'))
+db.on('error', console.error.bind(console, 'mongodb connection error:')).then(() => {
+  console.log('db on')
+  app.listen(3000, () => console.log(`listening on port 3000`))
+})
 
-app.listen(3000, () => console.log(`listening on port 3000`))

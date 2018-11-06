@@ -5,9 +5,10 @@ const User = require("../models/User")
 
 module.exports = router
 
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try{
-    res.redirect('/')
+    const pages = await Page.find()
+    res.render('index', {pages})
   } catch(err){
     next(err)
   }
@@ -39,7 +40,6 @@ router.get('/add', (req, res, next) => {
 router.get('/:title', async (req, res, next) => {
   try {
     const [page] = await Page.find({urlTitle: req.params.title})
-    console.log(page.content)
     res.render('wikipage', {title: page.title, content:page.content })
   } catch(err){
     next(err)
