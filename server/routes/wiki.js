@@ -16,10 +16,13 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const { author, email, title, content, status } = req.body
+    const { author, email, title, content, tags, status } = req.body
+    const authorInstance = await User.findOrCreate(author, email)
     const page = new Page({
       title,
       content,
+      tags: tags.split(", "),
+      author: authorInstance._id
     })
 
     const newPage = await page.save()
@@ -37,10 +40,33 @@ router.get('/add', (req, res, next) => {
   }
 })
 
-router.get('/:title', async (req, res, next) => {
+router.get("/search", async (req, res, next) => {
+  try {
+    const tag = req.query.tag
+    if(tag){
+      const pages = await Page.findByTag(req.query.tag)
+      res.render('search', {tag, pages})
+    } else res.render('search')
+  } catch(err){
+    next(err)
+  }
+})
+
+router.get("/similar/:title", async (req, res, next) => {
   try {
     const [page] = await Page.find({urlTitle: req.params.title})
-    res.render('wikipage', {title: page.title, content:page.content })
+    const pages = await page.findSimilar()
+    res.render('index', {pages})
+  } catch(err){
+    next(err)
+  }
+})
+
+router.get('/:title', async (req, res, next) => {
+  try {
+    const [page] = await Page.find({urlTitle: req.params.title}).populate('author')
+    console.log(page.renderedContent)
+    res.render('wikipage', {title: page.title, content:page.renderedContent, tags: page.tags, urlTitle: page.urlTitle, author: page.author })
   } catch(err){
     next(err)
   }

@@ -7,6 +7,7 @@ const swig = require('swig')
 require('../filters')(swig)
 const wikiRouter = require('./routes/wiki')
 const db = require("./models")
+const usersRouter = require("./routes/users")
 
 app.use(morgan('dev'))
 
@@ -24,6 +25,7 @@ app.engine('html', swig.renderFile)
 swig.setDefaults({cache: false})
 
 app.use('/wiki', wikiRouter)
+app.use('/users', usersRouter)
 
 app.get('/', (req, res, next) => {
   res.sendFile(path.join(__dirname, '../public/index.html'))

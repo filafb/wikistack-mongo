@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const myMarked = require('marked')
 
 function generateUrlTitle (title) {
   if (title) {
@@ -19,16 +20,47 @@ const pageSchema = new Schema({
   date: { type: Date, default: Date.now },
   status: { type: String, enum: ['open', 'closed'] },
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  tags: {type: [String]}
 });
 
 pageSchema.virtual('route').get(function() {
   return `/wiki/${this.urlTitle}`
 })
 
+pageSchema.virtual('renderedContent').get(function() {
+  const options = {
+    "baseUrl": null,
+    "breaks": false,
+    "gfm": true,
+    "headerIds": true,
+    "headerPrefix": "",
+    "highlight": null,
+    "langPrefix": "language-",
+    "mangle": true,
+    "pedantic": false,
+    "sanitize": false,
+    "sanitizer": null,
+    "silent": false,
+    "smartLists": false,
+    "smartypants": false,
+    "tables": true,
+    "xhtml": false
+   }
+  return myMarked(this.content, options)
+})
+
 pageSchema.pre("validate", function() {
   const urlTitle = generateUrlTitle(this.title)
   this.urlTitle = urlTitle
 })
+
+pageSchema.statics.findByTag = function(tag){
+  return this.find({tags: {$in: [tag]}})
+}
+
+pageSchema.methods.findSimilar = function(){
+  return this.model('Page').find({tags: {$in: this.tags}, title: {$ne: this.title}})
+}
 
 const Page = mongoose.model('Page', pageSchema);
 

@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h3>{{author.name}}</h3>
+  <small>{{author.email}}</small>
+  <hr>
+  {% if pages.length > 0 %}
+  <ul class="list-unstyled">
+    {% for page in pages %}
+    <li>{{page | pageLink }}</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  This author has no pages.
+  {% endif %}
+{% endblock %}

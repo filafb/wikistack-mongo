@@ -1,13 +1,20 @@
 {% extends "layout.html" %}
 
+
 {% block content %}
-  <h3>{{title}}<small> (<a href="PLACEHOLDER_URL_TITLE/similar">Similar</a>)</small></h3>
-  <h4>by <a href="PLACEHOLDER-AUTHOR-URL">PLACEHOLDER AUTHOR NAME</a></h4>
-  <div>PLACEHOLDER TAG LIST</div>
+  <h3>{{title}}<small> ({{urlTitle | similarLink}})</small></h3>
+  <h4>by {{ author | authorLink }}</h4>
+  {% if tags.length > 0 %}
+  <ul class="list-unstyled">
+    {% for tag in tags %}
+    <span>{{ tag | tagLink }}</span>
+    {% endfor %}
+  </ul>
+  {% endif %}
   <hr/>
-  <div>PLACEHOLDER AUTHOR NAME WITH LINK TO AUTHOR PAGE</div>
-  <div class="page-body">{{content}}</div>
+  <div class="page-body">{% autoescape false %}{{content}}{% endautoescape %}</div>
   <hr/>
   <a href="PLACEHOLDER_URL_TITLE/edit" class="btn btn-primary">edit this page</a>
   <a href="PLACEHOLDER_URL_TITLE/delete" class="btn btn-danger">delete this page</a>
 {% endblock %}
+

@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h3>Authors</h3>
+  <hr>
+  {% if users.length > 0 %}
+  <ul class="list-unstyled">
+    {% for user in users %}
+    <li>{{ user | authorLink }}</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  There are no authors.
+  {% endif %}
+{% endblock %}
